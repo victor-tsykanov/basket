@@ -13,18 +13,21 @@ class AddressTest {
     @Test
     void of_should_createAddress_when_allAddressPartsAreValid() {
         var country = faker.country();
+        var city = faker.city();
         var street = faker.streetName();
         var house = faker.buildingNumber();
         var apartment = faker.secondaryAddress();
 
         var address = Address.of(
                 country,
+                city,
                 street,
                 house,
                 apartment
         );
 
         assertThat(address.getCountry()).isEqualTo(country);
+        assertThat(address.getCity()).isEqualTo(city);
         assertThat(address.getStreet()).isEqualTo(street);
         assertThat(address.getHouse()).isEqualTo(house);
         assertThat(address.getApartment()).isEqualTo(apartment);
@@ -36,6 +39,7 @@ class AddressTest {
                 ConstraintViolationException.class,
                 () -> Address.of(
                         faker.country(),
+                        faker.city(),
                         faker.streetName(),
                         "",
                         faker.secondaryAddress()

@@ -61,6 +61,7 @@ class GetBasketQueryHandlerImplTest {
         var expectedAddress = Objects.requireNonNull(basket.getAddress());
 
         assertThat(address.country()).isEqualTo(expectedAddress.getCountry());
+        assertThat(address.city()).isEqualTo(expectedAddress.getCity());
         assertThat(address.street()).isEqualTo(expectedAddress.getStreet());
         assertThat(address.house()).isEqualTo(expectedAddress.getHouse());
         assertThat(address.apartment()).isEqualTo(expectedAddress.getApartment());

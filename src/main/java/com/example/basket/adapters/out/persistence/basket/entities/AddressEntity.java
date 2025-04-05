@@ -13,6 +13,7 @@ import org.jspecify.annotations.NullUnmarked;
 @NullUnmarked
 public class AddressEntity {
     private String country;
+    private String city;
     private String street;
     private String house;
     private String apartment;

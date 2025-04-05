@@ -29,6 +29,7 @@ public class BasketEntity {
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name="country", column = @Column(name = "address_country")),
+            @AttributeOverride(name="city", column = @Column(name = "address_city")),
             @AttributeOverride(name="street", column = @Column(name = "address_street")),
             @AttributeOverride(name="house", column = @Column(name = "address_house")),
             @AttributeOverride(name="apartment", column = @Column(name = "address_apartment"))

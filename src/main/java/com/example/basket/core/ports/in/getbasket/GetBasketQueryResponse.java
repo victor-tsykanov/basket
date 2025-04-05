@@ -9,6 +9,7 @@ public record GetBasketQueryResponse(
 ) {
     public record Address(
             String country,
+            String city,
             String street,
             String house,
             String apartment

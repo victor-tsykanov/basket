@@ -9,6 +9,7 @@ public class AddressFaker extends Faker {
     public Address make() {
         return Address.of(
                 addressFaker.country(),
+                addressFaker.city(),
                 addressFaker.streetName(),
                 addressFaker.buildingNumber(),
                 addressFaker.secondaryAddress()

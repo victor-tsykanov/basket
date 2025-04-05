@@ -16,6 +16,7 @@ public class AddAddressCommandHandlerImpl implements AddAddressCommandHandler {
     public void handle(AddAddressCommand command) {
         var address = Address.of(
                 command.getCountry(),
+                command.getCity(),
                 command.getStreet(),
                 command.getHouse(),
                 command.getApartment()

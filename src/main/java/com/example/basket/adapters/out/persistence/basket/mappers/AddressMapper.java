@@ -14,6 +14,7 @@ public class AddressMapper {
 
         return new AddressEntity(
                 address.getCountry(),
+                address.getCity(),
                 address.getStreet(),
                 address.getHouse(),
                 address.getApartment()
@@ -27,6 +28,7 @@ public class AddressMapper {
 
         return Address.of(
                 addressEntity.getCountry(),
+                addressEntity.getCity(),
                 addressEntity.getStreet(),
                 addressEntity.getHouse(),
                 addressEntity.getApartment()

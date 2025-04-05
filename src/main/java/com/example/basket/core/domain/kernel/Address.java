@@ -12,14 +12,20 @@ import static com.example.basket.common.Validation.requireValid;
 public class Address {
     @NotBlank
     String country;
+
+    @NotBlank
+    String city;
+
     @NotBlank
     String street;
+
     @NotBlank
     String house;
+
     @NotBlank
     String apartment;
 
-    public static Address of(String country, String street, String house, String apartment) {
-        return requireValid(new Address(country, street, house, apartment));
+    public static Address of(String country, String city, String street, String house, String apartment) {
+        return requireValid(new Address(country, city, street, house, apartment));
     }
 }

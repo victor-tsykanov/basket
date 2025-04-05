@@ -19,7 +19,7 @@ public class GetBasketQueryHandlerImpl implements GetBasketQueryHandler {
     public GetBasketQueryResponse handle(GetBasketQuery query) {
         var basket = jdbcClient
                 .sql("""
-                        select id, status, address_country, address_street, address_house, address_apartment
+                        select id, status, address_country, address_city, address_street, address_house, address_apartment
                         from baskets
                         where id = ?
                         """)
@@ -31,6 +31,7 @@ public class GetBasketQueryHandlerImpl implements GetBasketQueryHandler {
                                     rs.getString("status"),
                                     new GetBasketQueryResponse.Address(
                                             rs.getString("address_country"),
+                                            rs.getString("address_city"),
                                             rs.getString("address_street"),
                                             rs.getString("address_house"),
                                             rs.getString("address_apartment")

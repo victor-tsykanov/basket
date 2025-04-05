@@ -42,6 +42,7 @@ class AddAddressCommandHandlerImplTest {
                     assertThat(b.getAddress()).isEqualTo(
                             Address.of(
                                     command.getCountry(),
+                                    command.getCity(),
                                     command.getStreet(),
                                     command.getHouse(),
                                     command.getApartment()
