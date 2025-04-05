@@ -17,11 +17,17 @@ public class BasketFaker {
     }
 
     public Basket makeConfirmed() {
+        var basket = makeReadyForCheckout();
+        basket.checkout(Discount.of(faker.number().numberBetween(1, 99)));
+
+        return basket;
+    }
+
+    public Basket makeReadyForCheckout() {
         var basket = Basket.of(UUID.randomUUID());
         basket.change(goodFaker.make(), faker.number().numberBetween(1, 100));
         basket.addAddress(addressFaker.make());
         basket.addDeliveryPeriod(DeliveryPeriod.DAY);
-        basket.checkout(Discount.of(faker.number().numberBetween(1, 99)));
 
         return basket;
     }

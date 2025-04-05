@@ -7,6 +7,8 @@ import java.util.UUID;
 public interface BasketRepository {
     Basket get(UUID id);
 
+    boolean exists(UUID id);
+
     void create(Basket basket);
 
     void update(Basket basket);

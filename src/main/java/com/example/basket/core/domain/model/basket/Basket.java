@@ -41,9 +41,13 @@ public class Basket {
     private double total;
 
     public static Basket of(UUID buyerId) {
+        return Basket.of(UUID.randomUUID(), buyerId);
+    }
+
+    public static Basket of(UUID id, UUID buyerId) {
         return requireValid(
                 new Basket(
-                        UUID.randomUUID(),
+                        id,
                         buyerId,
                         Status.CREATED,
                         new ArrayList<>(),

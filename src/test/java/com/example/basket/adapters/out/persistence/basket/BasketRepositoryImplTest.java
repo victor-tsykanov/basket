@@ -103,6 +103,30 @@ class BasketRepositoryImplTest {
     }
 
     @Test
+    void exists_should_returnTrue_when_basketExists() {
+        // Arrange
+        var basket = basketFaker.makeCreated();
+
+        var basketEntity = basketMapper.toJpaEntity(basket);
+        springDataBasketRepository.save(basketEntity);
+
+        // Act
+        var exists = basketRepository.exists(basket.getId());
+
+        // Assert
+        assertThat(exists).isTrue();
+    }
+
+    @Test
+    void exists_should_returnFalse_when_basketDoesNotExist() {
+        // Act
+        var exists = basketRepository.exists(UUID.randomUUID());
+
+        // Assert
+        assertThat(exists).isFalse();
+    }
+
+    @Test
     void create_should_addBasket_when_basketDoesNotExist() {
         // Arrange
         var basket = basketFaker.makeCreated();

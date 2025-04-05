@@ -46,6 +46,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.20.6")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("io.github.classgraph:classgraph:4.8.179")
+    testImplementation("org.mockito:mockito-core:5.16.1")
     errorprone("com.uber.nullaway:nullaway:0.12.4")
     implementation("org.jspecify:jspecify:1.0.0")
     errorprone("com.google.errorprone:error_prone_core:2.36.0")

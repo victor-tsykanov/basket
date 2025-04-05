@@ -29,6 +29,12 @@ public class BasketRepositoryImpl implements BasketRepository {
 
     @Override
     @Transactional
+    public boolean exists(UUID id) {
+        return springDataBasketRepository.existsById(id);
+    }
+
+    @Override
+    @Transactional
     public void create(Basket basket) {
         if (springDataBasketRepository.existsById(basket.getId())) {
             throw new EntityExistsException("Basket with id=%s already exists".formatted(basket.getId()));
