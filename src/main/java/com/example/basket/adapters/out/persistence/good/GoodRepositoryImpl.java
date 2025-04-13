@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,6 +26,15 @@ public class GoodRepositoryImpl implements GoodRepository {
                 .findById(id)
                 .map(goodMapper::toDomainEntity)
                 .orElseThrow(() -> new EntityNotFoundException("Good with id=%s is not found".formatted(id)));
+    }
+
+    @Override
+    public List<Good> findAll() {
+        return springDataGoodRepository
+                .findAll()
+                .stream()
+                .map(goodMapper::toDomainEntity)
+                .toList();
     }
 
     @Override
