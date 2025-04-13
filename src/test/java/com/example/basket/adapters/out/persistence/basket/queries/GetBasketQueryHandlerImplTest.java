@@ -4,7 +4,6 @@ import com.example.basket.adapters.out.persistence.PersistenceTestsConfiguration
 import com.example.basket.common.exceptions.EntityNotFoundException;
 import com.example.basket.core.ports.in.getbasket.GetBasketQuery;
 import com.example.basket.core.ports.in.getbasket.GetBasketQueryHandler;
-import com.example.basket.core.ports.in.getbasket.GetBasketQueryResponse;
 import com.example.basket.core.ports.in.getbasket.GetBasketQueryResponse.Item;
 import com.example.basket.core.ports.out.BasketRepository;
 import com.example.basket.fakers.BasketFaker;
