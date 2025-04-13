@@ -1,0 +1,306 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Basket
+  description: Корзина товаров
+tags:
+  - name: Basket
+paths:
+  /api/v1/baskets/{basketId}/address/add:
+    post:
+      summary: Добавить адрес доставки
+      description: Позволяет добавить адрес доставки
+      operationId: AddAddress
+      tags:
+        - Basket
+      parameters:
+        - name: basketId
+          in: path
+          description: Идентификатор корзины
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Адрес
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '200':
+          description: Успешный ответ
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Ошибка выполнения бизнес логики
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/baskets/{basketId}/delivery-period/add:
+    post:
+      summary: Добавить период доставки
+      description: Позволяет период доставки
+      operationId: AddDeliveryPeriod
+      tags:
+        - Basket
+      parameters:
+        - name: basketId
+          in: path
+          description: Идентификатор корзины
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Период доставки
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliveryPeriod'
+      responses:
+        '200':
+          description: Успешный ответ
+        default:
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'              
+  /api/v1/baskets/{basketId}/items/change:
+    post:
+      summary: Изменить позицию
+      description: Позволяет добавить/удалить/изменить позицию
+      operationId: ChangeItems
+      tags:
+        - Basket
+      parameters:
+        - name: basketId
+          in: path
+          description: Идентификатор корзины
+          required: true
+          schema:
+            type: string
+            format: uuid          
+      requestBody:
+        description: Запрос на изменение позиции
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeItemRequest'
+      responses:
+        '200':
+          description: Успешный ответ
+        default:
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/baskets/{basketId}/checkout:
+    post:
+      summary: Оформить корзину
+      description: Позволяет оформить корзину
+      operationId: Checkout
+      tags:
+        - Basket
+      parameters:
+        - name: basketId
+          in: path
+          description: Идентификатор корзины
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешный ответ
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Ошибка выполнения бизнес логики
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/baskets/{basketId}:
+    get:
+      summary: Получить корзину
+      description: Позволяет получить корзину
+      operationId: GetBasket
+      tags:
+        - Basket
+      parameters:
+        - name: basketId
+          in: path
+          description: Идентификатор корзины
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Basket'
+        default:
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/baskets/new/test-checkout:
+    post:
+      summary: Оформить покупку (метод для теста)
+      description: Позволяет оформить покупку с целью тестирования
+      operationId: TestCheckout
+      tags:
+        - Basket
+      responses:
+        '201':
+          description: Успешный ответ
+        default:
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error' 
+components:
+  schemas:
+    Address:
+      allOf:
+        - required:
+          - country
+          - city
+          - street
+          - house
+          - apartment
+          properties:
+            country:
+              type: string
+              description: Страна
+            city:
+              type: string
+              description: Город
+            street:
+              type: string
+              description: Улица
+            house:
+              type: string
+              description: Дом 
+            apartment:
+              type: string
+              description: Квартира
+    DeliveryPeriod:
+      type: string
+      enum:
+        - morning
+        - midday
+        - evening
+        - night
+    ChangeItemRequest:
+      allOf:
+        - required:
+            - item
+            - buyerId
+          properties:
+            buyerId:
+              type: string
+              format: uuid
+              description: Идентификатор покупателя
+            item:
+              $ref: '#/components/schemas/Item'
+    Item:
+      allOf:
+        - required:
+            - goodId
+            - quantity
+          properties:
+            goodId:
+              type: string
+              format: uuid
+              description: Идентификатор товара
+            quantity:
+              type: integer
+              format: int32
+              description: Количество
+    ExistedItem:
+      allOf:
+        - $ref: '#/components/schemas/Item'
+        - type: object
+          required:
+            - rootCause
+          properties:
+            Id:
+              type: string
+              format: uuid
+              description: Идентификатор         
+    Basket:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Идентификатор корзины
+        address:
+          description: Адрес доставки
+          $ref: '#/components/schemas/Address'
+        deliveryPeriod:
+          description: Период доставки
+          $ref: '#/components/schemas/DeliveryPeriod'
+        items:
+          type: array
+          description: Товарные позиции
+          items:
+            $ref: '#/components/schemas/ExistedItem'
+        status:
+          type: string
+          description: Статус
+          enum:
+            - created
+            - confirmed                       
+    Good:
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Идентификатор
+        title:
+          type: string
+          description: Название
+        description:
+          type: string
+          description: Описание 
+        price:
+          type: number
+          multipleOf: 0.1 
+          description: Цена
+        quantity:
+          type: integer
+          description: Количество (остатки) 
+        weight:
+          type: integer
+          description: Вес                 
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Код ошибки
+        message:
+          type: string
+          description: Текст ошибки

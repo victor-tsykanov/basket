@@ -11,6 +11,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NullMarkedPackageTest {
 
     private static final String BASE_PACKAGE = "com.example.*";
+    private static final String[] GENERATED_PACKAGES = {
+            "com.example.basket.adapters.in.rest.api",
+            "com.example.basket.adapters.in.rest.dto"
+    };
     private static final String NULL_MARKED_ANNOTATION = "org.jspecify.annotations.NullMarked";
 
     @Test
@@ -18,6 +22,7 @@ public class NullMarkedPackageTest {
         try (ScanResult scanResult = new ClassGraph()
                 .enableAnnotationInfo()
                 .acceptPackages(BASE_PACKAGE)
+                .rejectPackages(GENERATED_PACKAGES)
                 .scan()) {
 
             var unmarkedPackages = scanResult.getAllClasses()

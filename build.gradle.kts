@@ -5,6 +5,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.openapi.generator") version "7.12.0"
     id("net.ltgt.errorprone") version "4.1.0"
 }
 
@@ -23,6 +24,14 @@ configurations {
     }
 }
 
+sourceSets {
+    main {
+        java {
+            srcDir("${layout.buildDirectory.get()}/generated/openapi/src/main/java")
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -34,6 +43,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.springframework.kafka:spring-kafka")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
+    implementation("org.openapitools:jackson-databind-nullable:0.2.6")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
@@ -61,5 +72,19 @@ tasks.withType<JavaCompile> {
         check("NullAway", CheckSeverity.ERROR)
         check("RemoveUnusedImports", CheckSeverity.ERROR)
         option("NullAway:AnnotatedPackages", "com.example")
+        disableWarningsInGeneratedCode = true
+        excludedPaths = ".*/build/generated/.*"
     }
+}
+
+openApiGenerate {
+    generatorName.set("spring")
+    inputSpec.set("$rootDir/src/main/resources/contracts/basket/openapi.yaml")
+    outputDir.set("${layout.buildDirectory.get()}/generated/openapi")
+    apiPackage.set("com.example.basket.adapters.in.rest.api")
+    modelPackage.set("com.example.basket.adapters.in.rest.dto")
+    configOptions.put("useJakartaEe", "true")
+    configOptions.put("interfaceOnly", "true")
+    configOptions.put("delegatePattern", "true")
+    configOptions.put("useTags", "true")
 }
