@@ -4,8 +4,11 @@ import com.example.basket.adapters.out.persistence.PersistenceTestsConfiguration
 import com.example.basket.common.exceptions.EntityNotFoundException;
 import com.example.basket.core.ports.in.getbasket.GetBasketQuery;
 import com.example.basket.core.ports.in.getbasket.GetBasketQueryHandler;
+import com.example.basket.core.ports.in.getbasket.GetBasketQueryResponse;
+import com.example.basket.core.ports.in.getbasket.GetBasketQueryResponse.Item;
 import com.example.basket.core.ports.out.BasketRepository;
 import com.example.basket.fakers.BasketFaker;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,7 @@ import org.springframework.test.context.transaction.TestTransaction;
 import java.util.Objects;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.assertThrows;
 
 @DataJpaTest()
@@ -56,6 +59,21 @@ class GetBasketQueryHandlerImplTest {
         // Assert
         assertThat(response.id()).isEqualTo(basket.getId());
         assertThat(response.status()).isEqualTo(basket.getStatus().name());
+        var deliveryPeriod = Objects.requireNonNull(basket.getDeliveryPeriod());
+        assertThat(response.deliveryPeriod()).isEqualTo(deliveryPeriod.getName());
+        assertThat(response.items())
+                .extracting(Item::id, Item::goodId, Item::quantity)
+                .containsExactly(
+                        basket
+                                .getItems()
+                                .stream()
+                                .map(item -> tuple(
+                                        item.getId(),
+                                        item.getGoodId(),
+                                        item.getQuantity()
+                                ))
+                                .toArray(Tuple[]::new)
+                );
 
         var address = response.address();
         var expectedAddress = Objects.requireNonNull(basket.getAddress());
