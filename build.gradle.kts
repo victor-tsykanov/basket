@@ -59,6 +59,7 @@ tasks.withType<Test> {
 tasks.withType<JavaCompile> {
     options.errorprone {
         check("NullAway", CheckSeverity.ERROR)
+        check("RemoveUnusedImports", CheckSeverity.ERROR)
         option("NullAway:AnnotatedPackages", "com.example")
     }
 }
