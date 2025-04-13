@@ -1,4 +1,4 @@
-create table if not exists delivery_periods
+create table delivery_periods
 (
     id    integer not null primary key,
     name  text    not null,
@@ -6,7 +6,7 @@ create table if not exists delivery_periods
     "to" integer not null
 );
 
-create table if not exists goods
+create table goods
 (
     id          uuid    not null primary key,
     title       text    not null,
@@ -16,7 +16,7 @@ create table if not exists goods
     quantity    integer not null
 );
 
-create table if not exists baskets
+create table baskets
 (
     id                 uuid not null primary key,
     buyer_id           uuid not null,
@@ -25,14 +25,14 @@ create table if not exists baskets
     address_street     text,
     address_house      text,
     address_apartment  text,
-    delivery_period_id integer references public.delivery_periods,
+    delivery_period_id integer references delivery_periods,
     status             varchar(50) not null,
     total              numeric not null
 );
 
-create index if not exists idx_baskets_delivery_period_id on public.baskets (delivery_period_id);
+create index idx_baskets_delivery_period_id on baskets (delivery_period_id);
 
-create table if not exists items
+create table items
 (
     id          uuid    not null primary key,
     position    integer not null,
@@ -41,7 +41,7 @@ create table if not exists items
     title       text    not null,
     description text    not null,
     price       numeric not null,
-    basket_id   uuid    not null references public.baskets on delete cascade
+    basket_id   uuid    not null references baskets on delete cascade
 );
 
-create index if not exists idx_items_basket_id on public.items (basket_id);
+create index idx_items_basket_id on items (basket_id);
