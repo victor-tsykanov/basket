@@ -145,9 +145,9 @@ class BasketTest {
     void addDeliveryPeriod_should_setDeliveryPeriod_when_statusIsCreated() {
         var basket = Basket.of(UUID.randomUUID());
 
-        basket.addDeliveryPeriod(DeliveryPeriod.DAY);
+        basket.addDeliveryPeriod(DeliveryPeriod.MIDDAY);
 
-        assertThat(basket.getDeliveryPeriod()).isEqualTo(DeliveryPeriod.DAY);
+        assertThat(basket.getDeliveryPeriod()).isEqualTo(DeliveryPeriod.MIDDAY);
     }
 
     @Test
@@ -156,7 +156,7 @@ class BasketTest {
 
         assertThrows(
                 IllegalStateException.class,
-                () -> basket.addDeliveryPeriod(DeliveryPeriod.DAY)
+                () -> basket.addDeliveryPeriod(DeliveryPeriod.MIDDAY)
         );
     }
 
@@ -187,7 +187,7 @@ class BasketTest {
     void checkout_should_throwException_when_thereIsNoItems() {
         var basket = Basket.of(UUID.randomUUID());
         basket.addAddress(addressFaker.make());
-        basket.addDeliveryPeriod(DeliveryPeriod.DAY);
+        basket.addDeliveryPeriod(DeliveryPeriod.MIDDAY);
 
         assertThrows(
                 IllegalStateException.class,
@@ -199,7 +199,7 @@ class BasketTest {
     void checkout_should_throwException_when_addressIsNotSet() {
         var basket = Basket.of(UUID.randomUUID());
         basket.change(apple, 1);
-        basket.addDeliveryPeriod(DeliveryPeriod.DAY);
+        basket.addDeliveryPeriod(DeliveryPeriod.MIDDAY);
 
         assertThrows(
                 IllegalStateException.class,

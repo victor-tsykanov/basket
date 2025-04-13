@@ -16,11 +16,11 @@ public class DeliveryPeriod {
     private int from;
     private int to;
 
-    public static final DeliveryPeriod MORNING = new DeliveryPeriod(1, "Morning", 6, 12);
-    public static final DeliveryPeriod DAY = new DeliveryPeriod(2, "Day", 12, 17);
-    public static final DeliveryPeriod EVENING = new DeliveryPeriod(3, "Evening", 17, 24);
-    public static final DeliveryPeriod NIGHT = new DeliveryPeriod(4, "Night", 0, 6);
-    public static final List<DeliveryPeriod> LIST = List.of(MORNING, DAY, EVENING, NIGHT);
+    public static final DeliveryPeriod MORNING = new DeliveryPeriod(1, "morning", 6, 12);
+    public static final DeliveryPeriod MIDDAY = new DeliveryPeriod(2, "midday", 12, 17);
+    public static final DeliveryPeriod EVENING = new DeliveryPeriod(3, "evening", 17, 24);
+    public static final DeliveryPeriod NIGHT = new DeliveryPeriod(4, "night", 0, 6);
+    public static final List<DeliveryPeriod> LIST = List.of(MORNING, MIDDAY, EVENING, NIGHT);
 
     public static DeliveryPeriod getById(int id) {
         return LIST

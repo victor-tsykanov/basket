@@ -20,7 +20,7 @@ class AddDeliveryPeriodCommandHandlerImplTest {
         var basketRepository = mock(BasketRepository.class);
         when(basketRepository.get(basket.getId())).thenReturn(basket);
 
-        var command = AddDeliveryPeriodCommand.of(basket.getId(), "Morning");
+        var command = AddDeliveryPeriodCommand.of(basket.getId(), "morning");
         var handler = new AddDeliveryPeriodCommandHandlerImpl(basketRepository);
 
         // Act

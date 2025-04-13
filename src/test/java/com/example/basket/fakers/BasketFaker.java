@@ -27,7 +27,7 @@ public class BasketFaker {
         var basket = Basket.of(UUID.randomUUID());
         basket.change(goodFaker.make(), faker.number().numberBetween(1, 100));
         basket.addAddress(addressFaker.make());
-        basket.addDeliveryPeriod(DeliveryPeriod.DAY);
+        basket.addDeliveryPeriod(DeliveryPeriod.MIDDAY);
 
         return basket;
     }

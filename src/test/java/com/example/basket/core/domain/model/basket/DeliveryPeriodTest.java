@@ -15,8 +15,8 @@ class DeliveryPeriodTest {
 
     @Test
     void getByName_should_returnDeliveryPeriodWithGivenName() {
-        var period = DeliveryPeriod.getByName(DeliveryPeriod.DAY.getName());
+        var period = DeliveryPeriod.getByName(DeliveryPeriod.MIDDAY.getName());
 
-        assertThat(period).isEqualTo(DeliveryPeriod.DAY);
+        assertThat(period).isEqualTo(DeliveryPeriod.MIDDAY);
     }
 }

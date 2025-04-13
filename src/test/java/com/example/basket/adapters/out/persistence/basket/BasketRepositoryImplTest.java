@@ -78,7 +78,7 @@ class BasketRepositoryImplTest {
         basket.change(Goods.CARROT, 1);
         basket.change(Goods.ORANGE, 2);
         basket.addAddress(addressFaker.make());
-        basket.addDeliveryPeriod(DeliveryPeriod.DAY);
+        basket.addDeliveryPeriod(DeliveryPeriod.MIDDAY);
 
         var basketEntity = basketMapper.toJpaEntity(basket);
         springDataBasketRepository.save(basketEntity);
@@ -182,7 +182,7 @@ class BasketRepositoryImplTest {
         basket.change(Goods.APPLE, 0);
         basket.change(Goods.ORANGE, 5);
         basket.change(Goods.CARROT, 1);
-        basket.addDeliveryPeriod(DeliveryPeriod.DAY);
+        basket.addDeliveryPeriod(DeliveryPeriod.MIDDAY);
         basket.addAddress(addressFaker.make());
         basket.checkout(Discount.of(10));
 
