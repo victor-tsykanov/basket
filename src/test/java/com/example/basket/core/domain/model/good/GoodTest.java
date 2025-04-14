@@ -4,7 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import com.example.basket.core.domain.kernel.Weight;
-import com.example.basket.fakers.GoodFaker;
+import com.example.basket.factories.GoodFactory;
 
 import java.util.UUID;
 
@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GoodTest {
     private final Faker faker = new Faker();
-    private final GoodFaker goodFaker = new GoodFaker();
 
     @Test
     void of_should_createGood_when_allParametersAreValid() {
@@ -51,7 +50,7 @@ class GoodTest {
 
     @Test
     void changeStocks_should_changeQuantity_when_quantityIsNonNegative() {
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
         var newQuantity = good.getQuantity() + 5;
 
         good.changeStocks(newQuantity);
@@ -61,7 +60,7 @@ class GoodTest {
 
     @Test
     void changeStocks_should_throwException_when_quantityIsNegative() {
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
 
         assertThrows(
                 IllegalArgumentException.class,

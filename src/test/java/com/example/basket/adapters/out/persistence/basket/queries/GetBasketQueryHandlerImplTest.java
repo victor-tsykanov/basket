@@ -6,7 +6,7 @@ import com.example.basket.core.ports.in.getbasket.GetBasketQuery;
 import com.example.basket.core.ports.in.getbasket.GetBasketQueryHandler;
 import com.example.basket.core.ports.in.getbasket.GetBasketQueryResponse.Item;
 import com.example.basket.core.ports.out.BasketRepository;
-import com.example.basket.fakers.BasketFaker;
+import com.example.basket.factories.BasketFactory;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -31,8 +31,6 @@ class GetBasketQueryHandlerImplTest {
     @Autowired
     private BasketRepository basketRepository;
 
-    private static final BasketFaker basketFaker = new BasketFaker();
-
     @Autowired
     private JdbcClient jdbcClient;
 
@@ -46,7 +44,7 @@ class GetBasketQueryHandlerImplTest {
     @Test
     void handle_should_returnBasket_when_basketExists() {
         // Arrange
-        var basket = basketFaker.makeReadyForCheckout();
+        var basket = BasketFactory.buildReadyForCheckout();
         basketRepository.create(basket);
         TestTransaction.flagForCommit();
         TestTransaction.end();

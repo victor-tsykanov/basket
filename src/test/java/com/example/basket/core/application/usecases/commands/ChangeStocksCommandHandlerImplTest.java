@@ -2,19 +2,17 @@ package com.example.basket.core.application.usecases.commands;
 
 import com.example.basket.core.ports.in.changestocks.ChangeStocksCommand;
 import com.example.basket.core.ports.out.GoodRepository;
-import com.example.basket.fakers.GoodFaker;
+import com.example.basket.factories.GoodFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class ChangeStocksCommandHandlerImplTest {
-    GoodFaker goodFaker = new GoodFaker();
-
     @Test
     void handle() {
         // Arrange
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
 
         var goodRepository = mock(GoodRepository.class);
         when(goodRepository.get(good.getId())).thenReturn(good);

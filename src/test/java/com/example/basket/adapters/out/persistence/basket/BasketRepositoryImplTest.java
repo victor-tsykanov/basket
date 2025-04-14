@@ -19,9 +19,9 @@ import com.example.basket.core.domain.model.basket.DeliveryPeriod;
 import com.example.basket.core.domain.model.good.Good;
 import com.example.basket.core.ports.out.BasketRepository;
 import com.example.basket.core.ports.out.GoodRepository;
-import com.example.basket.fakers.AddressFaker;
-import com.example.basket.fakers.BasketFaker;
-import com.example.basket.fakers.GoodFaker;
+import com.example.basket.factories.AddressFactory;
+import com.example.basket.factories.BasketFactory;
+import com.example.basket.factories.GoodFactory;
 
 import java.util.List;
 import java.util.Objects;
@@ -54,9 +54,6 @@ class BasketRepositoryImplTest {
     @Autowired
     private JdbcClient jdbcClient;
 
-    private static final BasketFaker basketFaker = new BasketFaker();
-    private static final AddressFaker addressFaker = new AddressFaker();
-
     @BeforeEach
     void createGoods() {
         Goods.ALL.forEach(goodRepository::create);
@@ -74,10 +71,10 @@ class BasketRepositoryImplTest {
     @Test
     void get_should_returnBasket_when_basketExists() {
         // Arrange
-        var basket = basketFaker.makeCreated();
+        var basket = BasketFactory.buildUnconfirmed();
         basket.change(Goods.CARROT, 1);
         basket.change(Goods.ORANGE, 2);
-        basket.addAddress(addressFaker.make());
+        basket.addAddress(AddressFactory.build());
         basket.addDeliveryPeriod(DeliveryPeriod.MIDDAY);
 
         var basketEntity = basketMapper.toJpaEntity(basket);
@@ -105,7 +102,7 @@ class BasketRepositoryImplTest {
     @Test
     void exists_should_returnTrue_when_basketExists() {
         // Arrange
-        var basket = basketFaker.makeCreated();
+        var basket = BasketFactory.buildUnconfirmed();
 
         var basketEntity = basketMapper.toJpaEntity(basket);
         springDataBasketRepository.save(basketEntity);
@@ -129,7 +126,7 @@ class BasketRepositoryImplTest {
     @Test
     void create_should_addBasket_when_basketDoesNotExist() {
         // Arrange
-        var basket = basketFaker.makeCreated();
+        var basket = BasketFactory.buildUnconfirmed();
         basket.change(Goods.APPLE, 1);
         basket.change(Goods.ORANGE, 2);
 
@@ -158,7 +155,7 @@ class BasketRepositoryImplTest {
     @Test
     void create_should_throwException_when_basketExists() {
         // Arrange
-        var basket = basketFaker.makeCreated();
+        var basket = BasketFactory.buildUnconfirmed();
         basketRepository.create(basket);
 
         // Act
@@ -171,11 +168,11 @@ class BasketRepositoryImplTest {
     @Test
     void update_should_saveBasket_when_basketExists() {
         // Arrange
-        var basket = basketFaker.makeCreated();
+        var basket = BasketFactory.buildUnconfirmed();
         basket.change(Goods.APPLE, 1);
         basket.change(Goods.ORANGE, 2);
         basket.addDeliveryPeriod(DeliveryPeriod.EVENING);
-        basket.addAddress(addressFaker.make());
+        basket.addAddress(AddressFactory.build());
 
         basketRepository.create(basket);
 
@@ -183,7 +180,7 @@ class BasketRepositoryImplTest {
         basket.change(Goods.ORANGE, 5);
         basket.change(Goods.CARROT, 1);
         basket.addDeliveryPeriod(DeliveryPeriod.MIDDAY);
-        basket.addAddress(addressFaker.make());
+        basket.addAddress(AddressFactory.build());
         basket.checkout(Discount.of(10));
 
         // Act
@@ -218,7 +215,7 @@ class BasketRepositoryImplTest {
     @Test
     void update_should_throwException_when_basketDoesNotExist() {
         // Arrange
-        var basket = basketFaker.makeCreated();
+        var basket = BasketFactory.buildUnconfirmed();
 
         // Act
         assertThrows(
@@ -228,11 +225,9 @@ class BasketRepositoryImplTest {
     }
 
     static class Goods {
-        static final GoodFaker goodFaker = new GoodFaker();
-
-        static final Good APPLE = goodFaker.make();
-        static final Good ORANGE = goodFaker.make();
-        static final Good CARROT = goodFaker.make();
+        static final Good APPLE = GoodFactory.build();
+        static final Good ORANGE = GoodFactory.build();
+        static final Good CARROT = GoodFactory.build();
 
         static final List<Good> ALL = List.of(APPLE, ORANGE, CARROT);
     }

@@ -5,18 +5,17 @@ import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import com.example.basket.fakers.GoodFaker;
+import com.example.basket.factories.GoodFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ItemTest {
     private final Faker faker = new Faker();
-    private final GoodFaker goodFaker = new GoodFaker();
 
     @Test
     void of_should_createItem_when_allParametersAreValid() {
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
         var quantity = faker.number().positive();
 
         var item = Item.of(good, quantity);
@@ -31,7 +30,7 @@ class ItemTest {
 
     @Test
     void of_should_throwException_when_quantityIsNegative() {
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
 
         assertThrows(
                 ConstraintViolationException.class,
@@ -42,7 +41,7 @@ class ItemTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 15})
     void setQuantity_should_updateQuantity_when_newValueIsValid(int newQuantity) {
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
         var item = Item.of(good, 19);
 
         item.setQuantity(newQuantity);
@@ -52,7 +51,7 @@ class ItemTest {
 
     @Test
     void setQuantity_should_throwException_when_newValueIsNegative() {
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
         var item = Item.of(good, 19);
 
         assertThrows(
@@ -63,7 +62,7 @@ class ItemTest {
 
     @Test
     void getSubTotal_should_itemTotalPrice() {
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
         var item = Item.of(good, 5);
 
         var subTotal = item.getSubTotal();

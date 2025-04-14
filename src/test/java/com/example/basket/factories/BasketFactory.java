@@ -1,4 +1,4 @@
-package com.example.basket.fakers;
+package com.example.basket.factories;
 
 import net.datafaker.Faker;
 import com.example.basket.core.domain.kernel.Discount;
@@ -7,26 +7,27 @@ import com.example.basket.core.domain.model.basket.DeliveryPeriod;
 
 import java.util.UUID;
 
-public class BasketFaker {
-    private final Faker faker = new Faker();
-    private final AddressFaker addressFaker = new AddressFaker();
-    private final GoodFaker goodFaker = new GoodFaker();
+public class BasketFactory {
+    private static final Faker faker = new Faker();
 
-    public Basket makeCreated() {
+    private BasketFactory() {
+    }
+
+    public static Basket buildUnconfirmed() {
         return Basket.of(UUID.randomUUID());
     }
 
-    public Basket makeConfirmed() {
-        var basket = makeReadyForCheckout();
+    public static Basket buildConfirmed() {
+        var basket = buildReadyForCheckout();
         basket.checkout(Discount.of(faker.number().numberBetween(1, 99)));
 
         return basket;
     }
 
-    public Basket makeReadyForCheckout() {
+    public static Basket buildReadyForCheckout() {
         var basket = Basket.of(UUID.randomUUID());
-        basket.change(goodFaker.make(), faker.number().numberBetween(1, 100));
-        basket.addAddress(addressFaker.make());
+        basket.change(GoodFactory.build(), faker.number().numberBetween(1, 100));
+        basket.addAddress(AddressFactory.build());
         basket.addDeliveryPeriod(DeliveryPeriod.MIDDAY);
 
         return basket;

@@ -1,12 +1,15 @@
-package com.example.basket.fakers;
+package com.example.basket.factories;
 
 import net.datafaker.Faker;
 import com.example.basket.core.domain.kernel.Address;
 
-public class AddressFaker extends Faker {
+public class AddressFactory {
     private static final net.datafaker.providers.base.Address addressFaker = new Faker().address();
 
-    public Address make() {
+    private AddressFactory() {
+    }
+
+    public static Address build() {
         return Address.of(
                 addressFaker.country(),
                 addressFaker.city(),

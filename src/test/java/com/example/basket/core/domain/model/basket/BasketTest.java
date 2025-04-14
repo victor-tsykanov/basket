@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import com.example.basket.core.domain.kernel.Discount;
 import com.example.basket.core.domain.kernel.Weight;
 import com.example.basket.core.domain.model.good.Good;
-import com.example.basket.fakers.AddressFaker;
-import com.example.basket.fakers.BasketFaker;
+import com.example.basket.factories.AddressFactory;
+import com.example.basket.factories.BasketFactory;
 
 import java.util.UUID;
 
@@ -15,9 +15,6 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BasketTest {
-    private final AddressFaker addressFaker = new AddressFaker();
-    private final BasketFaker basketFaker = new BasketFaker();
-
     private static final Good apple = Good.of(
             UUID.randomUUID(),
             "apple",
@@ -123,7 +120,7 @@ class BasketTest {
     @Test
     void addAddress_should_setAddress_when_statusIsCreated() {
         var basket = Basket.of(UUID.randomUUID());
-        var address = addressFaker.make();
+        var address = AddressFactory.build();
 
         basket.addAddress(address);
 
@@ -132,8 +129,8 @@ class BasketTest {
 
     @Test
     void addAddress_should_throwException_when_statusIsConfirmed() {
-        var basket = basketFaker.makeConfirmed();
-        var address = addressFaker.make();
+        var basket = BasketFactory.buildConfirmed();
+        var address = AddressFactory.build();
 
         assertThrows(
                 IllegalStateException.class,
@@ -152,7 +149,7 @@ class BasketTest {
 
     @Test
     void addDeliveryPeriod_should_throwException_when_statusIsConfirmed() {
-        var basket = basketFaker.makeConfirmed();
+        var basket = BasketFactory.buildConfirmed();
 
         assertThrows(
                 IllegalStateException.class,
@@ -164,7 +161,7 @@ class BasketTest {
     void checkout_should_confirmBasketAndApplyDiscount() {
         var basket = Basket.of(UUID.randomUUID());
         basket.change(apple, 2);
-        basket.addAddress(addressFaker.make());
+        basket.addAddress(AddressFactory.build());
         basket.addDeliveryPeriod(DeliveryPeriod.EVENING);
         var discount = Discount.of(10);
 
@@ -176,7 +173,7 @@ class BasketTest {
 
     @Test
     void checkout_should_throwException_when_statusIsConfirmed() {
-        var basket = basketFaker.makeConfirmed();
+        var basket = BasketFactory.buildConfirmed();
         assertThrows(
                 IllegalStateException.class,
                 () -> basket.checkout(Discount.of(10))
@@ -186,7 +183,7 @@ class BasketTest {
     @Test
     void checkout_should_throwException_when_thereIsNoItems() {
         var basket = Basket.of(UUID.randomUUID());
-        basket.addAddress(addressFaker.make());
+        basket.addAddress(AddressFactory.build());
         basket.addDeliveryPeriod(DeliveryPeriod.MIDDAY);
 
         assertThrows(
@@ -211,7 +208,7 @@ class BasketTest {
     void checkout_should_throwException_when_deliveryPeriodIsNotSet() {
         var basket = Basket.of(UUID.randomUUID());
         basket.change(apple, 1);
-        basket.addAddress(addressFaker.make());
+        basket.addAddress(AddressFactory.build());
 
         assertThrows(
                 IllegalStateException.class,

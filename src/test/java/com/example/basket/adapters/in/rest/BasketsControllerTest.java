@@ -19,8 +19,8 @@ import com.example.basket.core.ports.in.getbasket.GetBasketQueryHandler;
 import com.example.basket.core.ports.in.getbasket.GetBasketQueryResponse;
 import com.example.basket.core.ports.in.testcheckout.TestCheckoutCommand;
 import com.example.basket.core.ports.in.testcheckout.TestCheckoutCommandHandler;
-import com.example.basket.fakers.AddressFaker;
-import com.example.basket.fakers.BasketFaker;
+import com.example.basket.factories.AddressFactory;
+import com.example.basket.factories.BasketFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
@@ -73,9 +73,6 @@ class BasketsControllerTest {
     @MockitoBean
     private GetBasketQueryHandler getBasketQueryHandler;
 
-    private BasketFaker basketFaker = new BasketFaker();
-    private AddressFaker addressFaker = new AddressFaker();
-
     @BeforeEach
     void initializeRestAssured() {
         RestAssuredMockMvc.mockMvc(mockMvc);
@@ -88,8 +85,8 @@ class BasketsControllerTest {
 
     @Test
     void addAddress_should_succeed_when_commandSucceeds() {
-        var basket = basketFaker.makeCreated();
-        var address = addressFaker.make();
+        var basket = BasketFactory.buildUnconfirmed();
+        var address = AddressFactory.build();
 
         given()
                 .body(
@@ -123,7 +120,7 @@ class BasketsControllerTest {
     @Test
     void addAddress_should_returnNotFound_when_commandThrowsEntityNotFoundException() {
         var basketId = UUID.randomUUID();
-        var address = addressFaker.make();
+        var address = AddressFactory.build();
 
         doThrow(new EntityNotFoundException("Basket not found"))
                 .when(addAddressCommandHandler)
@@ -154,7 +151,7 @@ class BasketsControllerTest {
     @Test
     void addAddress_should_returnConflict_when_commandThrowsEntityExistsException() {
         var basketId = UUID.randomUUID();
-        var address = addressFaker.make();
+        var address = AddressFactory.build();
 
         doThrow(new EntityExistsException("Basket exists"))
                 .when(addAddressCommandHandler)
@@ -185,7 +182,7 @@ class BasketsControllerTest {
     @Test
     void addAddress_should_returnUnprocessableEntity_when_commandThrowsIllegalArgumentException() {
         var basketId = UUID.randomUUID();
-        var address = addressFaker.make();
+        var address = AddressFactory.build();
 
         doThrow(new IllegalArgumentException("Not valid"))
                 .when(addAddressCommandHandler)
@@ -216,7 +213,7 @@ class BasketsControllerTest {
     @Test
     void addAddress_should_returnInternalServerError_when_commandThrowsException() {
         var basketId = UUID.randomUUID();
-        var address = addressFaker.make();
+        var address = AddressFactory.build();
 
         doThrow(new RuntimeException("Boom!"))
                 .when(addAddressCommandHandler)
@@ -311,7 +308,7 @@ class BasketsControllerTest {
 
     @Test
     void getBasket_should_returnBasket_when_querySucceeds() {
-        var basket = basketFaker.makeReadyForCheckout();
+        var basket = BasketFactory.buildReadyForCheckout();
         var address = Objects.requireNonNull(basket.getAddress());
         var deliveryPeriod = Objects.requireNonNull(basket.getDeliveryPeriod());
         var item = Objects.requireNonNull(basket.getItems().getFirst());

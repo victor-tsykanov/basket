@@ -4,8 +4,8 @@ import com.example.basket.core.domain.model.basket.Item;
 import com.example.basket.core.ports.in.changeitems.ChangeItemsCommand;
 import com.example.basket.core.ports.out.BasketRepository;
 import com.example.basket.core.ports.out.GoodRepository;
-import com.example.basket.fakers.BasketFaker;
-import com.example.basket.fakers.GoodFaker;
+import com.example.basket.factories.BasketFactory;
+import com.example.basket.factories.GoodFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,14 +13,11 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.Mockito.*;
 
 class ChangeItemsCommandHandlerImplTest {
-    BasketFaker basketFaker = new BasketFaker();
-    GoodFaker goodFaker = new GoodFaker();
-
     @Test
     void handle_should_updateBasket_when_basketExists() {
         // Arrange
-        var basket = basketFaker.makeCreated();
-        var good = goodFaker.make();
+        var basket = BasketFactory.buildUnconfirmed();
+        var good = GoodFactory.build();
 
         var basketRepository = mock(BasketRepository.class);
         when(basketRepository.get(basket.getId())).thenReturn(basket);
@@ -51,8 +48,8 @@ class ChangeItemsCommandHandlerImplTest {
     @Test
     void handle_should_createBasket_when_basketDoesNotExist() {
         // Arrange
-        var basket = basketFaker.makeCreated();
-        var good = goodFaker.make();
+        var basket = BasketFactory.buildUnconfirmed();
+        var good = GoodFactory.build();
 
         var basketRepository = mock(BasketRepository.class);
         when(basketRepository.exists(basket.getId())).thenReturn(false);

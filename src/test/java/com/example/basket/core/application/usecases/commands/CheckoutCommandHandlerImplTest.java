@@ -4,19 +4,17 @@ import com.example.basket.core.domain.model.basket.Basket;
 import com.example.basket.core.domain.services.PromoGoodsService;
 import com.example.basket.core.ports.in.chechout.CheckoutCommand;
 import com.example.basket.core.ports.out.BasketRepository;
-import com.example.basket.fakers.BasketFaker;
+import com.example.basket.factories.BasketFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class CheckoutCommandHandlerImplTest {
-    BasketFaker basketFaker = new BasketFaker();
-
     @Test
     void handle() {
         // Arrange
-        var basket = basketFaker.makeReadyForCheckout();
+        var basket = BasketFactory.buildReadyForCheckout();
 
         var basketRepository = mock(BasketRepository.class);
         when(basketRepository.get(basket.getId())).thenReturn(basket);

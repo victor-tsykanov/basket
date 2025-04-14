@@ -12,7 +12,7 @@ import com.example.basket.adapters.out.persistence.good.repositories.SpringDataG
 import com.example.basket.common.exceptions.EntityExistsException;
 import com.example.basket.common.exceptions.EntityNotFoundException;
 import com.example.basket.core.ports.out.GoodRepository;
-import com.example.basket.fakers.GoodFaker;
+import com.example.basket.factories.GoodFactory;
 
 import java.util.UUID;
 
@@ -34,8 +34,6 @@ class GoodRepositoryImplTest {
     @Autowired
     private JdbcClient jdbcClient;
 
-    private final GoodFaker goodFaker = new GoodFaker();
-
     @AfterEach
     void cleanUpDatabase() {
         jdbcClient.sql("truncate table goods").update();
@@ -44,7 +42,7 @@ class GoodRepositoryImplTest {
     @Test
     void get_should_returnGood_when_goodExists() {
         // Arrange
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
         springDataGoodRepository.save(goodMapper.toJpaEntity(good));
 
         // Act
@@ -69,7 +67,7 @@ class GoodRepositoryImplTest {
     @Test
     void create_should_addGood_when_goodDoesNotExist() {
         // Arrange
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
 
         // Act
         goodRepository.create(good);
@@ -91,7 +89,7 @@ class GoodRepositoryImplTest {
     @Test
     void create_should_throwException_when_goodExists() {
         // Arrange
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
         goodRepository.create(good);
 
         // Act
@@ -104,7 +102,7 @@ class GoodRepositoryImplTest {
     @Test
     void update_should_saveGood_when_goodExists() {
         // Arrange
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
         springDataGoodRepository.save(goodMapper.toJpaEntity(good));
         var newQuantity = good.getQuantity() + 1;
         good.changeStocks(newQuantity);
@@ -120,7 +118,7 @@ class GoodRepositoryImplTest {
     @Test
     void update_should_throwException_when_goodDoesNotExist() {
         // Arrange
-        var good = goodFaker.make();
+        var good = GoodFactory.build();
 
         // Act
         assertThrows(

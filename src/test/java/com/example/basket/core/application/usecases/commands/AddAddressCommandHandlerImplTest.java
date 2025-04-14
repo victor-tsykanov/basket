@@ -3,7 +3,7 @@ package com.example.basket.core.application.usecases.commands;
 import com.example.basket.core.domain.kernel.Address;
 import com.example.basket.core.ports.in.addaddress.AddAddressCommand;
 import com.example.basket.core.ports.out.BasketRepository;
-import com.example.basket.fakers.BasketFaker;
+import com.example.basket.factories.BasketFactory;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 
@@ -11,13 +11,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class AddAddressCommandHandlerImplTest {
-    BasketFaker basketFaker = new BasketFaker();
     net.datafaker.providers.base.Address addressFaker = new Faker().address();
 
     @Test
     void handle_should_updateAddress() {
         // Arrange
-        var basket = basketFaker.makeCreated();
+        var basket = BasketFactory.buildUnconfirmed();
 
         var basketRepository = mock(BasketRepository.class);
         when(basketRepository.get(basket.getId())).thenReturn(basket);
