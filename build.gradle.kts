@@ -1,11 +1,12 @@
-import net.ltgt.gradle.errorprone.errorprone
 import net.ltgt.gradle.errorprone.CheckSeverity
+import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     java
     id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.openapi.generator") version "7.12.0"
+    id("com.google.protobuf") version "0.9.5"
     id("net.ltgt.errorprone") version "4.1.0"
 }
 
@@ -29,6 +30,9 @@ sourceSets {
         java {
             srcDir("${layout.buildDirectory.get()}/generated/openapi/src/main/java")
         }
+        proto {
+            srcDir("$rootDir/src/main/resources/contracts/")
+        }
     }
 }
 
@@ -45,6 +49,11 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+    implementation("io.grpc:grpc-stub:1.71.0")
+    implementation("io.grpc:grpc-protobuf:1.71.0")
+    implementation("io.grpc:grpc-netty:1.71.0")
+    implementation("com.google.protobuf:protobuf-java:4.30.2")
+    implementation("javax.annotation:javax.annotation-api:1.3.2")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
@@ -88,4 +97,22 @@ openApiGenerate {
     configOptions.put("interfaceOnly", "true")
     configOptions.put("delegatePattern", "true")
     configOptions.put("useTags", "true")
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:4.30.2"
+    }
+    plugins {
+        create("grpc") {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.71.0"
+        }
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.plugins {
+                create("grpc")
+            }
+        }
+    }
 }
