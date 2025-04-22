@@ -12,8 +12,8 @@ public class NullMarkedPackageTest {
 
     private static final String BASE_PACKAGE = "com.example.basket.*";
     private static final String[] GENERATED_PACKAGES = {
-            "com.example.basket.adapters.in.rest.api",
-            "com.example.basket.adapters.in.rest.dto"
+            "com.example.basket.infrastructure.adapters.in.rest.api",
+            "com.example.basket.infrastructure.adapters.in.rest.dto"
     };
     private static final String NULL_MARKED_ANNOTATION = "org.jspecify.annotations.NullMarked";
 
