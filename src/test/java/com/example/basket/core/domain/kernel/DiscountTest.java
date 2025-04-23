@@ -29,8 +29,10 @@ class DiscountTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"0, 0"})
-    @CsvSource({"100, 70"})
+    @CsvSource({
+            "0, 0",
+            "100, 70"
+    })
     void apply_should_returnDiscountedPrice_when_priceIsNonNegative(double price, double expectedDiscountedPrice) {
         var discount = Discount.of(30);
 
