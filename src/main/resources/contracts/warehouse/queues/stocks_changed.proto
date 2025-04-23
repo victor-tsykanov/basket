@@ -1,0 +1,10 @@
+syntax = "proto3";
+package StocksChanged;
+
+option go_package = "queues/stockschangedpb";
+option java_package = "com.example.warehouse";
+
+message StocksChangedIntegrationEvent {
+  string goodId = 1;
+  int32 quantity = 2;
+}
