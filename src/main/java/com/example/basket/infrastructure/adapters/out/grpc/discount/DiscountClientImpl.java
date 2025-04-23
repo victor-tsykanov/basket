@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class DiscountClientImpl implements DiscountClient {
     private final String discountServiceGrpcAddress;
 
-    public DiscountClientImpl(@Value("${discount_service.grpc.address}") String discountServiceGrpcAddress) {
+    public DiscountClientImpl(@Value("${discount-service.grpc.address}") String discountServiceGrpcAddress) {
         this.discountServiceGrpcAddress = discountServiceGrpcAddress;
     }
 
