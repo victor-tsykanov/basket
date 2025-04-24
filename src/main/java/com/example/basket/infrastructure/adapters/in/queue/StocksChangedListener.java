@@ -3,16 +3,14 @@ package com.example.basket.infrastructure.adapters.in.queue;
 import com.example.basket.core.ports.in.changestocks.ChangeStocksCommand;
 import com.example.basket.core.ports.in.changestocks.ChangeStocksCommandHandler;
 import com.example.warehouse.StocksChanged.StocksChangedIntegrationEvent;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -33,23 +31,14 @@ public class StocksChangedListener {
         changeStocksCommandHandler.handle(command);
     }
 
-    private StocksChangedIntegrationEvent parseEvent(String message) {
-        var mapper = new ObjectMapper();
-        Map<String, Object> values;
-
+    private StocksChangedIntegrationEvent parseEvent(String jsonMessage) {
+        var builder = StocksChangedIntegrationEvent.newBuilder();
         try {
-            values = mapper.readValue(message, Map.class);
-        } catch (JsonProcessingException e) {
+            JsonFormat.parser().ignoringUnknownFields().merge(jsonMessage, builder);
+        } catch (InvalidProtocolBufferException e) {
             throw new RuntimeException(e);
         }
 
-        var goodId = (String) values.get("goodId");
-        var quantity = (Integer) values.get("quantity");
-
-        return StocksChangedIntegrationEvent
-                .newBuilder()
-                .setGoodId(Objects.requireNonNull(goodId))
-                .setQuantity(Objects.requireNonNull(quantity))
-                .build();
+        return builder.build();
     }
 }
