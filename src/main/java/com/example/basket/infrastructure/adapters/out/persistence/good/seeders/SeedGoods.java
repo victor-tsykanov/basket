@@ -1,9 +1,9 @@
 package com.example.basket.infrastructure.adapters.out.persistence.good.seeders;
 
-import com.example.basket.infrastructure.adapters.out.persistence.good.mappers.GoodMapper;
-import com.example.basket.infrastructure.adapters.out.persistence.good.repositories.SpringDataGoodRepository;
 import com.example.basket.core.domain.kernel.Weight;
 import com.example.basket.core.domain.model.good.Good;
+import com.example.basket.infrastructure.adapters.out.persistence.good.mappers.GoodMapper;
+import com.example.basket.infrastructure.adapters.out.persistence.good.repositories.SpringDataGoodRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -25,7 +25,7 @@ public class SeedGoods implements ApplicationRunner {
                                 Good.of(
                                         UUID.fromString("539eed47-d75b-4c46-9105-c87bdf525839"),
                                         "Bread",
-                                        "...",
+                                        "Bread description",
                                         100,
                                         10,
                                         Weight.of(1)
