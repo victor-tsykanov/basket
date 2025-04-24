@@ -1,14 +1,16 @@
 package com.example.basket.core.domain.model.basket;
 
+import com.example.basket.common.ddd.AggregateRoot;
+import com.example.basket.core.domain.kernel.Address;
+import com.example.basket.core.domain.kernel.Discount;
+import com.example.basket.core.domain.model.basket.events.BasketConfirmedEvent;
+import com.example.basket.core.domain.model.good.Good;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import com.example.basket.core.domain.kernel.Address;
-import com.example.basket.core.domain.kernel.Discount;
-import com.example.basket.core.domain.model.good.Good;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,7 @@ import static com.example.basket.common.Validation.requireValid;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
-public class Basket {
+public class Basket extends AggregateRoot {
     @NotNull
     private final UUID id;
 
@@ -133,6 +135,8 @@ public class Basket {
 
         total = discount.apply(total);
         status = Status.CONFIRMED;
+
+        this.raiseDomainEvent(new BasketConfirmedEvent(this));
     }
 
     public enum Status {

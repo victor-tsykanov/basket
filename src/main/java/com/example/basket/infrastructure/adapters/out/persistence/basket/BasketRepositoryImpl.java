@@ -1,13 +1,14 @@
 package com.example.basket.infrastructure.adapters.out.persistence.basket;
 
-import com.example.basket.infrastructure.adapters.out.persistence.basket.mappers.BasketMapper;
-import com.example.basket.infrastructure.adapters.out.persistence.basket.repositories.SpringDataBasketRepository;
 import com.example.basket.common.exceptions.EntityExistsException;
 import com.example.basket.common.exceptions.EntityNotFoundException;
 import com.example.basket.core.domain.model.basket.Basket;
 import com.example.basket.core.ports.out.BasketRepository;
+import com.example.basket.infrastructure.adapters.out.persistence.basket.mappers.BasketMapper;
+import com.example.basket.infrastructure.adapters.out.persistence.basket.repositories.SpringDataBasketRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class BasketRepositoryImpl implements BasketRepository {
     private final SpringDataBasketRepository springDataBasketRepository;
     private final BasketMapper basketMapper;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     @Transactional
@@ -42,6 +44,8 @@ public class BasketRepositoryImpl implements BasketRepository {
 
         var basketEntity = basketMapper.toJpaEntity(basket);
         springDataBasketRepository.save(basketEntity);
+
+        publishDomainEvents(basket);
     }
 
     @Override
@@ -53,5 +57,12 @@ public class BasketRepositoryImpl implements BasketRepository {
 
         var basketEntity = basketMapper.toJpaEntity(basket);
         springDataBasketRepository.save(basketEntity);
+
+        publishDomainEvents(basket);
+    }
+
+    protected void publishDomainEvents(Basket basket) {
+        basket.getDomainEvents().forEach(applicationEventPublisher::publishEvent);
+        basket.clearDomainEvents();
     }
 }
