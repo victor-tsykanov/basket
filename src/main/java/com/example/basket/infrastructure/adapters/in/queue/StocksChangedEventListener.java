@@ -16,7 +16,7 @@ import java.util.UUID;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class StocksChangedListener {
+public class StocksChangedEventListener {
     private final ChangeStocksCommandHandler changeStocksCommandHandler;
 
     @KafkaListener(topics = "${kafka.stocks-changed-topic}")
