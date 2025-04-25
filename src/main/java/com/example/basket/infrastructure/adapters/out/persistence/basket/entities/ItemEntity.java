@@ -1,5 +1,6 @@
 package com.example.basket.infrastructure.adapters.out.persistence.basket.entities;
 
+import com.example.basket.infrastructure.adapters.out.persistence.common.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -17,8 +18,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @NullUnmarked
-@EqualsAndHashCode(of = "id")
-public class ItemEntity {
+@EqualsAndHashCode(of = "id", callSuper = false)
+public class ItemEntity extends BaseEntity {
     @Id
     private UUID id;
     private Integer position;

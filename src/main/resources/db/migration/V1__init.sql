@@ -1,9 +1,11 @@
 create table delivery_periods
 (
-    id    integer not null primary key,
-    name  text    not null,
-    "from" integer not null,
-    "to" integer not null
+    id         integer not null primary key,
+    name       text    not null,
+    "from"     integer not null,
+    "to"       integer not null,
+    created_at timestamp default now(),
+    updated_at timestamp
 );
 
 create table goods
@@ -13,7 +15,9 @@ create table goods
     description text    not null,
     price       numeric not null,
     weight      integer,
-    quantity    integer not null
+    quantity    integer not null,
+    created_at  timestamp default now(),
+    updated_at  timestamp
 );
 
 create table baskets
@@ -27,7 +31,9 @@ create table baskets
     address_apartment  text,
     delivery_period_id integer references delivery_periods,
     status             varchar(50) not null,
-    total              numeric not null
+    total              numeric not null,
+    created_at         timestamp default now(),
+    updated_at         timestamp
 );
 
 create index idx_baskets_delivery_period_id on baskets (delivery_period_id);
@@ -41,7 +47,10 @@ create table items
     title       text    not null,
     description text    not null,
     price       numeric not null,
-    basket_id   uuid    not null references baskets on delete cascade
+    basket_id   uuid    not null references baskets on delete cascade,
+    created_at  timestamp default now(),
+    updated_at  timestamp
 );
 
 create index idx_items_basket_id on items (basket_id);
+create index idx_items_created_at on items (created_at);

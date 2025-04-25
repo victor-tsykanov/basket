@@ -1,5 +1,6 @@
 package com.example.basket.infrastructure.adapters.out.persistence.basket.entities;
 
+import com.example.basket.infrastructure.adapters.out.persistence.common.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -14,7 +15,7 @@ import org.jspecify.annotations.NullUnmarked;
 @NoArgsConstructor
 @Getter
 @NullUnmarked
-public class DeliveryPeriodEntity {
+public class DeliveryPeriodEntity extends BaseEntity {
     @Id
     private Integer id;
     private String name;
