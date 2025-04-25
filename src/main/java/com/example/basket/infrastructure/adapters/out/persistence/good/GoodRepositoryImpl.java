@@ -1,11 +1,11 @@
 package com.example.basket.infrastructure.adapters.out.persistence.good;
 
-import com.example.basket.infrastructure.adapters.out.persistence.good.mappers.GoodMapper;
-import com.example.basket.infrastructure.adapters.out.persistence.good.repositories.SpringDataGoodRepository;
 import com.example.basket.common.exceptions.EntityExistsException;
 import com.example.basket.common.exceptions.EntityNotFoundException;
 import com.example.basket.core.domain.model.good.Good;
 import com.example.basket.core.ports.out.GoodRepository;
+import com.example.basket.infrastructure.adapters.out.persistence.good.mappers.GoodMapper;
+import com.example.basket.infrastructure.adapters.out.persistence.good.repositories.SpringDataGoodRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class GoodRepositoryImpl implements GoodRepository {
     @Override
     public List<Good> findAll() {
         return springDataGoodRepository
-                .findAll()
+                .findAllByOrderByCreatedAtAsc()
                 .stream()
                 .map(goodMapper::toDomainEntity)
                 .toList();
