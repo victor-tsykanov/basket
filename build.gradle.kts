@@ -1,13 +1,20 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import net.ltgt.gradle.errorprone.CheckSeverity
 import net.ltgt.gradle.errorprone.errorprone
 
+val grpcVersion = "1.72.0"
+val protobufVersion = "4.30.2"
+val flywayVersion = "11.8.0"
+val testcontainersVersion = "1.21.0"
+
 plugins {
     java
-    id("org.springframework.boot") version "3.4.3"
+    id("org.springframework.boot") version "3.4.5"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.openapi.generator") version "7.12.0"
+    id("org.openapi.generator") version "7.13.0"
     id("com.google.protobuf") version "0.9.5"
-    id("net.ltgt.errorprone") version "4.1.0"
+    id("net.ltgt.errorprone") version "4.2.0"
+    id("com.github.ben-manes.versions") version "0.52.0"
 }
 
 group = "com.example"
@@ -45,16 +52,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.kafka:spring-kafka")
-    implementation("org.flywaydb:flyway-core")
-    implementation("org.flywaydb:flyway-database-postgresql")
+    implementation("org.flywaydb:flyway-core:$flywayVersion")
+    implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("org.springframework.kafka:spring-kafka")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
-    implementation("io.grpc:grpc-stub:1.71.0")
-    implementation("io.grpc:grpc-protobuf:1.71.0")
-    implementation("io.grpc:grpc-netty:1.71.0")
-    implementation("com.google.protobuf:protobuf-java:4.30.2")
-    implementation("com.google.protobuf:protobuf-java-util:4.30.2")
+    implementation("io.grpc:grpc-stub:$grpcVersion")
+    implementation("io.grpc:grpc-protobuf:$grpcVersion")
+    implementation("io.grpc:grpc-netty:$grpcVersion")
+    implementation("com.google.protobuf:protobuf-java:$protobufVersion")
+    implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
     implementation("javax.annotation:javax.annotation-api:1.3.2")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -62,17 +69,17 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.kafka:spring-kafka-test")
-    testImplementation("net.datafaker:datafaker:2.4.2")
+    testImplementation("net.datafaker:datafaker:2.4.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.testcontainers:postgresql:1.20.6")
-    testImplementation("org.testcontainers:junit-jupiter:1.20.6")
+    testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
+    testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("io.github.classgraph:classgraph:4.8.179")
-    testImplementation("org.mockito:mockito-core:5.16.1")
+    testImplementation("org.mockito:mockito-core:5.17.0")
     testImplementation("io.rest-assured:spring-mock-mvc:5.5.1")
-    errorprone("com.uber.nullaway:nullaway:0.12.4")
+    errorprone("com.uber.nullaway:nullaway:0.12.7")
     implementation("org.jspecify:jspecify:1.0.0")
-    errorprone("com.google.errorprone:error_prone_core:2.36.0")
+    errorprone("com.google.errorprone:error_prone_core:2.38.0")
 }
 
 tasks.withType<Test> {
@@ -86,6 +93,12 @@ tasks.withType<JavaCompile> {
         option("NullAway:AnnotatedPackages", "com.example")
         disableWarningsInGeneratedCode = true
         excludedPaths = ".*/build/generated/.*"
+    }
+}
+
+tasks.withType<DependencyUpdatesTask> {
+    rejectVersionIf {
+        candidate.version.uppercase().contains("RC") || candidate.version.matches(".*-M\\d+".toRegex())
     }
 }
 
@@ -103,11 +116,11 @@ openApiGenerate {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:4.30.2"
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
     }
     plugins {
         create("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.71.0"
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
         }
     }
     generateProtoTasks {
