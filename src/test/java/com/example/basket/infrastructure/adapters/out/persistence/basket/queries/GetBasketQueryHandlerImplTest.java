@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest()
 @Import(PersistenceTestsConfiguration.class)
@@ -54,32 +55,33 @@ class GetBasketQueryHandlerImplTest {
         var response = queryHandler.handle(command);
 
         // Assert
-        assertThat(response.id()).isEqualTo(basket.getId());
-        assertThat(response.status()).isEqualTo(basket.getStatus().name());
         var deliveryPeriod = Objects.requireNonNull(basket.getDeliveryPeriod());
-        assertThat(response.deliveryPeriod()).isEqualTo(deliveryPeriod.getName());
-        assertThat(response.items())
-                .extracting(Item::id, Item::goodId, Item::quantity)
-                .containsExactly(
-                        basket
-                                .getItems()
-                                .stream()
-                                .map(item -> tuple(
-                                        item.getId(),
-                                        item.getGoodId(),
-                                        item.getQuantity()
-                                ))
-                                .toArray(Tuple[]::new)
-                );
-
         var address = response.address();
         var expectedAddress = Objects.requireNonNull(basket.getAddress());
 
-        assertThat(address.country()).isEqualTo(expectedAddress.getCountry());
-        assertThat(address.city()).isEqualTo(expectedAddress.getCity());
-        assertThat(address.street()).isEqualTo(expectedAddress.getStreet());
-        assertThat(address.house()).isEqualTo(expectedAddress.getHouse());
-        assertThat(address.apartment()).isEqualTo(expectedAddress.getApartment());
+        assertAll(
+                () -> assertThat(response.id()).isEqualTo(basket.getId()),
+                () -> assertThat(response.status()).isEqualTo(basket.getStatus().name()),
+                () -> assertThat(response.deliveryPeriod()).isEqualTo(deliveryPeriod.getName()),
+                () -> assertThat(response.items())
+                        .extracting(Item::id, Item::goodId, Item::quantity)
+                        .containsExactly(
+                                basket
+                                        .getItems()
+                                        .stream()
+                                        .map(item -> tuple(
+                                                item.getId(),
+                                                item.getGoodId(),
+                                                item.getQuantity()
+                                        ))
+                                        .toArray(Tuple[]::new)
+                        ),
+                () -> assertThat(address.country()).isEqualTo(expectedAddress.getCountry()),
+                () -> assertThat(address.city()).isEqualTo(expectedAddress.getCity()),
+                () -> assertThat(address.street()).isEqualTo(expectedAddress.getStreet()),
+                () -> assertThat(address.house()).isEqualTo(expectedAddress.getHouse()),
+                () -> assertThat(address.apartment()).isEqualTo(expectedAddress.getApartment())
+        );
     }
 
     @Test

@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BasketTest {
@@ -38,9 +39,11 @@ class BasketTest {
 
         var basket = Basket.of(buyerId);
 
-        assertThat(basket.getId()).isNotNull();
-        assertThat(basket.getBuyerId()).isEqualTo(buyerId);
-        assertThat(basket.getStatus()).isEqualTo(Basket.Status.CREATED);
+        assertAll(
+                () -> assertThat(basket.getId()).isNotNull(),
+                () -> assertThat(basket.getBuyerId()).isEqualTo(buyerId),
+                () -> assertThat(basket.getStatus()).isEqualTo(Basket.Status.CREATED)
+        );
     }
 
     @Test
@@ -50,13 +53,15 @@ class BasketTest {
         basket.change(apple, 1);
         basket.change(orange, 2);
 
-        assertThat(basket.getItems())
-                .extracting(Item::getGoodId, Item::getQuantity)
-                .containsExactly(
-                        tuple(apple.getId(), 1),
-                        tuple(orange.getId(), 2)
-                );
-        assertThat(basket.getTotal()).isEqualTo(apple.getPrice() + orange.getPrice() * 2);
+        assertAll(
+                () -> assertThat(basket.getItems())
+                        .extracting(Item::getGoodId, Item::getQuantity)
+                        .containsExactly(
+                                tuple(apple.getId(), 1),
+                                tuple(orange.getId(), 2)
+                        ),
+                () -> assertThat(basket.getTotal()).isEqualTo(apple.getPrice() + orange.getPrice() * 2)
+        );
     }
 
     @Test
@@ -66,12 +71,14 @@ class BasketTest {
 
         basket.change(orange, 0);
 
-        assertThat(basket.getItems())
-                .extracting(Item::getGoodId, Item::getQuantity)
-                .containsExactly(
-                        tuple(apple.getId(), 1)
-                );
-        assertThat(basket.getTotal()).isEqualTo(apple.getPrice());
+        assertAll(
+                () -> assertThat(basket.getItems())
+                        .extracting(Item::getGoodId, Item::getQuantity)
+                        .containsExactly(
+                                tuple(apple.getId(), 1)
+                        ),
+                () -> assertThat(basket.getTotal()).isEqualTo(apple.getPrice())
+        );
     }
 
     @Test
@@ -82,13 +89,15 @@ class BasketTest {
 
         basket.change(orange, 3);
 
-        assertThat(basket.getItems())
-                .extracting(Item::getGoodId, Item::getQuantity)
-                .containsExactly(
-                        tuple(apple.getId(), 1),
-                        tuple(orange.getId(), 3)
-                );
-        assertThat(basket.getTotal()).isEqualTo(apple.getPrice() + orange.getPrice() * 3);
+        assertAll(
+                () -> assertThat(basket.getItems())
+                        .extracting(Item::getGoodId, Item::getQuantity)
+                        .containsExactly(
+                                tuple(apple.getId(), 1),
+                                tuple(orange.getId(), 3)
+                        ),
+                () -> assertThat(basket.getTotal()).isEqualTo(apple.getPrice() + orange.getPrice() * 3)
+        );
     }
 
     @Test
@@ -99,12 +108,14 @@ class BasketTest {
 
         basket.change(apple, 0);
 
-        assertThat(basket.getItems())
-                .extracting(Item::getGoodId, Item::getQuantity)
-                .containsExactly(
-                        tuple(orange.getId(), 2)
-                );
-        assertThat(basket.getTotal()).isEqualTo(orange.getPrice() * 2);
+        assertAll(
+                () -> assertThat(basket.getItems())
+                        .extracting(Item::getGoodId, Item::getQuantity)
+                        .containsExactly(
+                                tuple(orange.getId(), 2)
+                        ),
+                () -> assertThat(basket.getTotal()).isEqualTo(orange.getPrice() * 2)
+        );
     }
 
     @Test
@@ -167,8 +178,10 @@ class BasketTest {
 
         basket.checkout(discount);
 
-        assertThat(basket.getStatus()).isEqualTo(Basket.Status.CONFIRMED);
-        assertThat(basket.getTotal()).isEqualTo(apple.getPrice() * 2 * 0.9);
+        assertAll(
+                () -> assertThat(basket.getStatus()).isEqualTo(Basket.Status.CONFIRMED),
+                () -> assertThat(basket.getTotal()).isEqualTo(apple.getPrice() * 2 * 0.9)
+        );
     }
 
     @Test

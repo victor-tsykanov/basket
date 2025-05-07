@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.offset;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
@@ -138,17 +139,18 @@ class BasketRepositoryImplTest {
         assertThat(optionalJpaEntity).isNotEmpty();
 
         var jpaEntity = optionalJpaEntity.get();
-        assertThat(jpaEntity.getId()).isEqualTo(basket.getId());
-        assertThat(jpaEntity.getBuyerId()).isEqualTo(basket.getBuyerId());
-        assertThat(jpaEntity.getAddress()).isNull();
-        assertThat(jpaEntity.getDeliveryPeriod()).isNull();
-        assertThat(jpaEntity.getStatus()).isEqualTo(basket.getStatus().name());
-        assertThat(jpaEntity.getTotal()).isEqualTo(basket.getTotal(), offset(0.001));
-        assertThat(jpaEntity.getItems()).hasSize(2);
-
-        assertThat(jpaEntity.getItems()).satisfiesExactly(
-                goodWithQuantity(Goods.APPLE, 1),
-                goodWithQuantity(Goods.ORANGE, 2)
+        assertAll(
+                () -> assertThat(jpaEntity.getId()).isEqualTo(basket.getId()),
+                () -> assertThat(jpaEntity.getBuyerId()).isEqualTo(basket.getBuyerId()),
+                () -> assertThat(jpaEntity.getAddress()).isNull(),
+                () -> assertThat(jpaEntity.getDeliveryPeriod()).isNull(),
+                () -> assertThat(jpaEntity.getStatus()).isEqualTo(basket.getStatus().name()),
+                () -> assertThat(jpaEntity.getTotal()).isEqualTo(basket.getTotal(), offset(0.001)),
+                () -> assertThat(jpaEntity.getItems()).hasSize(2),
+                () -> assertThat(jpaEntity.getItems()).satisfiesExactly(
+                        goodWithQuantity(Goods.APPLE, 1),
+                        goodWithQuantity(Goods.ORANGE, 2)
+                )
         );
     }
 
@@ -191,25 +193,23 @@ class BasketRepositoryImplTest {
         assertThat(optionalJpaEntity).isNotEmpty();
 
         var jpaEntity = optionalJpaEntity.get();
-        assertThat(jpaEntity.getId()).isEqualTo(basket.getId());
-        assertThat(jpaEntity.getBuyerId()).isEqualTo(basket.getBuyerId());
-
         var expectedStreet = Objects.requireNonNull(basket.getAddress()).getStreet();
-        assertThat(jpaEntity.getAddress().getStreet()).isEqualTo(expectedStreet);
-
         var expectedPeriodName = Objects.requireNonNull(basket.getDeliveryPeriod()).getName();
-        assertThat(jpaEntity.getDeliveryPeriod().getName()).isEqualTo(expectedPeriodName);
 
-        assertThat(jpaEntity.getStatus()).isEqualTo(basket.getStatus().name());
-        assertThat(jpaEntity.getTotal()).isEqualTo(basket.getTotal(), offset(0.001));
-        assertThat(jpaEntity.getItems()).hasSize(2);
-
-        assertThat(jpaEntity.getItems()).satisfiesExactly(
-                goodWithQuantity(Goods.ORANGE, 5),
-                goodWithQuantity(Goods.CARROT, 1)
+        assertAll(
+                () -> assertThat(jpaEntity.getId()).isEqualTo(basket.getId()),
+                () -> assertThat(jpaEntity.getBuyerId()).isEqualTo(basket.getBuyerId()),
+                () -> assertThat(jpaEntity.getAddress().getStreet()).isEqualTo(expectedStreet),
+                () -> assertThat(jpaEntity.getDeliveryPeriod().getName()).isEqualTo(expectedPeriodName),
+                () -> assertThat(jpaEntity.getStatus()).isEqualTo(basket.getStatus().name()),
+                () -> assertThat(jpaEntity.getTotal()).isEqualTo(basket.getTotal(), offset(0.001)),
+                () -> assertThat(jpaEntity.getItems()).hasSize(2),
+                () -> assertThat(jpaEntity.getItems()).satisfiesExactly(
+                        goodWithQuantity(Goods.ORANGE, 5),
+                        goodWithQuantity(Goods.CARROT, 1)
+                ),
+                () -> assertThat(springDataItemRepository.count()).isEqualTo(2)
         );
-
-        assertThat(springDataItemRepository.count()).isEqualTo(2);
     }
 
     @Test
@@ -233,12 +233,12 @@ class BasketRepositoryImplTest {
     }
 
     static Consumer<ItemEntity> goodWithQuantity(Good good, int quantity) {
-        return itemEntity -> {
-            assertThat(itemEntity.getGoodId()).isEqualTo(good.getId());
-            assertThat(itemEntity.getTitle()).isEqualTo(good.getTitle());
-            assertThat(itemEntity.getDescription()).isEqualTo(good.getDescription());
-            assertThat(itemEntity.getPrice()).isEqualTo(good.getPrice());
-            assertThat(itemEntity.getQuantity()).isEqualTo(quantity);
-        };
+        return itemEntity -> assertAll(
+                () -> assertThat(itemEntity.getGoodId()).isEqualTo(good.getId()),
+                () -> assertThat(itemEntity.getTitle()).isEqualTo(good.getTitle()),
+                () -> assertThat(itemEntity.getDescription()).isEqualTo(good.getDescription()),
+                () -> assertThat(itemEntity.getPrice()).isEqualTo(good.getPrice()),
+                () -> assertThat(itemEntity.getQuantity()).isEqualTo(quantity)
+        );
     }
 }

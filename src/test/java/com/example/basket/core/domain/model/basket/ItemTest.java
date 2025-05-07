@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import com.example.basket.factories.GoodFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ItemTest {
@@ -20,12 +21,14 @@ class ItemTest {
 
         var item = Item.of(good, quantity);
 
-        assertThat(item.getId()).isNotNull();
-        assertThat(item.getGoodId()).isEqualTo(good.getId());
-        assertThat(item.getTitle()).isEqualTo(good.getTitle());
-        assertThat(item.getDescription()).isEqualTo(good.getDescription());
-        assertThat(item.getPrice()).isEqualTo(good.getPrice());
-        assertThat(item.getQuantity()).isEqualTo(quantity);
+        assertAll(
+                () -> assertThat(item.getId()).isNotNull(),
+                () -> assertThat(item.getGoodId()).isEqualTo(good.getId()),
+                () -> assertThat(item.getTitle()).isEqualTo(good.getTitle()),
+                () -> assertThat(item.getDescription()).isEqualTo(good.getDescription()),
+                () -> assertThat(item.getPrice()).isEqualTo(good.getPrice()),
+                () -> assertThat(item.getQuantity()).isEqualTo(quantity)
+        );
     }
 
     @Test

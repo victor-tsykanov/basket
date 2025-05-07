@@ -9,6 +9,7 @@ import com.example.basket.factories.GoodFactory;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GoodTest {
@@ -25,12 +26,14 @@ class GoodTest {
 
         var good = Good.of(id, title, description, price, quantity, weight);
 
-        assertThat(good.getId()).isEqualTo(id);
-        assertThat(good.getTitle()).isEqualTo(title);
-        assertThat(good.getDescription()).isEqualTo(description);
-        assertThat(good.getPrice()).isEqualTo(price);
-        assertThat(good.getQuantity()).isEqualTo(quantity);
-        assertThat(good.getWeight()).isEqualTo(weight);
+        assertAll(
+                () -> assertThat(good.getId()).isEqualTo(id),
+                () -> assertThat(good.getTitle()).isEqualTo(title),
+                () -> assertThat(good.getDescription()).isEqualTo(description),
+                () -> assertThat(good.getPrice()).isEqualTo(price),
+                () -> assertThat(good.getQuantity()).isEqualTo(quantity),
+                () -> assertThat(good.getWeight()).isEqualTo(weight)
+        );
     }
 
     @Test

@@ -5,7 +5,7 @@ import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class AddressTest {
     private static final net.datafaker.providers.base.Address faker = new Faker().address();
@@ -26,11 +26,13 @@ class AddressTest {
                 apartment
         );
 
-        assertThat(address.getCountry()).isEqualTo(country);
-        assertThat(address.getCity()).isEqualTo(city);
-        assertThat(address.getStreet()).isEqualTo(street);
-        assertThat(address.getHouse()).isEqualTo(house);
-        assertThat(address.getApartment()).isEqualTo(apartment);
+        assertAll(
+                () -> assertThat(address.getCountry()).isEqualTo(country),
+                () -> assertThat(address.getCity()).isEqualTo(city),
+                () -> assertThat(address.getStreet()).isEqualTo(street),
+                () -> assertThat(address.getHouse()).isEqualTo(house),
+                () -> assertThat(address.getApartment()).isEqualTo(apartment)
+        );
     }
 
     @Test

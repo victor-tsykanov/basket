@@ -17,6 +17,7 @@ import com.example.basket.factories.GoodFactory;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
@@ -77,12 +78,14 @@ class GoodRepositoryImplTest {
         assertThat(optionalJpaEntity).isNotEmpty();
 
         var jpaEntity = optionalJpaEntity.get();
-        assertThat(jpaEntity.getId()).isEqualTo(good.getId());
-        assertThat(jpaEntity.getTitle()).isEqualTo(good.getTitle());
-        assertThat(jpaEntity.getDescription()).isEqualTo(good.getDescription());
-        assertThat(jpaEntity.getPrice()).isEqualTo(good.getPrice());
-        assertThat(jpaEntity.getWeight()).isEqualTo(good.getWeight().getValue());
-        assertThat(jpaEntity.getQuantity()).isEqualTo(good.getQuantity());
+        assertAll(
+                () -> assertThat(jpaEntity.getId()).isEqualTo(good.getId()),
+                () -> assertThat(jpaEntity.getTitle()).isEqualTo(good.getTitle()),
+                () -> assertThat(jpaEntity.getDescription()).isEqualTo(good.getDescription()),
+                () -> assertThat(jpaEntity.getPrice()).isEqualTo(good.getPrice()),
+                () -> assertThat(jpaEntity.getWeight()).isEqualTo(good.getWeight().getValue()),
+                () -> assertThat(jpaEntity.getQuantity()).isEqualTo(good.getQuantity())
+        );
     }
 
 
